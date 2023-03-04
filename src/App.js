@@ -77,6 +77,7 @@ const App = () => {
         count={Math.ceil(charactersData.length / charPerPage)}
         page={page}
         onChange={handleChange}
+        color="secondary"
       />
     </div>
   );
