@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -6,10 +6,12 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box } from "@mui/material";
+import axios from "axios";
 
-export default function Karakter({ char, films }) {
+export default function Karakter({ char }) {
   const [expanded, setExpanded] = useState(false);
   const [expandedSub, setExpandedSub] = useState(false);
+  const [films, setFilms] = useState([]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -17,6 +19,18 @@ export default function Karakter({ char, films }) {
   const handleChangeSub = (panel) => (event, isExpanded) => {
     setExpandedSub(isExpanded ? panel : false);
   };
+
+  useEffect(() => {
+    if (expanded) {
+      axios
+        .all(char.films.map((filmLink) => axios.get(filmLink)))
+        .then((results) => {
+          let filmData = [];
+          results.map((result) => filmData.push(result.data));
+          setFilms(filmData);
+        });
+    }
+  }, [expanded]);
 
   const CustomType = styled(Typography)`
     text-align: left;
